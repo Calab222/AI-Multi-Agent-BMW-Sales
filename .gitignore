@@ -2,7 +2,7 @@
 __pycache__/
 *.pyc
 .env
-artifacts/
+# artifacts/
 chroma_db/
 my-app/node_modules
 technical-audience/
