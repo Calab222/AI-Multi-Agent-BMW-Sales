@@ -31,6 +31,18 @@ The system synthesizes the quantitative metrics from the Pandas Agent and the qu
 ![Final Executive Report](./assets/llm-report.png)
 ---
 
+## 📂 Project Structure
+* artifacts/ – Generated plots and reports
+* chroma_db/ – Vector database (auto-generated, gitignored)
+* data/ – Source datasets (Excel/CSV)
+* DualAgentProcess.py – Core logic for Pandas and RAG agents
+* ImportConfig.py – Configuration and Data Ingestion
+* InsightSynthesisEngine.py – Report writing logic
+* main.py / server.py – FastAPI application entry points
+* requirements.txt – Python dependencies
+* README.md – Project documentation
+
+---
 ## 🛠️ Architecture
 
 The solution follows a modern client-server architecture:
@@ -88,16 +100,3 @@ The solution follows a modern client-server architecture:
 3.  Open your browser to the URL provided by the frontend (usually `http://localhost:5173`).
 
 > **Note on Initial Run:** On the very first run, the system will take a few moments to ingest the Excel data into ChromaDB. Subsequent runs will be instant.
-
----
-
-## 📂 Project Structure
-* artifacts/ – Generated plots and reports
-* chroma_db/ – Vector database (auto-generated, gitignored)
-* data/ – Source datasets (Excel/CSV)
-* DualAgentProcess.py – Core logic for Pandas and RAG agents
-* ImportConfig.py – Configuration and Data Ingestion
-* InsightSynthesisEngine.py – Report writing logic
-* main.py / server.py – FastAPI application entry points
-* requirements.txt – Python dependencies
-* README.md – Project documentation
