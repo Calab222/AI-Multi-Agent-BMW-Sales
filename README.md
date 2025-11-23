@@ -6,6 +6,11 @@ This project is an AI-powered analytics platform designed to automate business r
 
 The system was built as a prototype to analyze BMW Global Sales Data (2020-2024), demonstrating how LLMs can orchestrate complex analytical tasks, generate visualizations, and produce narrative storytelling without human intervention.
 
+### 📄 Key Deliverables
+
+* [**Final Generated Report**](./final_report.md)
+* [**Technical Presentation (Colton Tang)**](./Technical-Audience-Colton-Tang.pdf)
+
 ---
 
 ## 🚀 Key Features
