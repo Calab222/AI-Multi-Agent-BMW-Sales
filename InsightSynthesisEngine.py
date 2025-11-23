@@ -37,10 +37,13 @@ class InsightSynthesizer:
         
         INSTRUCTIONS:
         1. Structure the report with an Executive Summary, followed by the Detailed Analysis (per section), and a Conclusion.
-        2. The report should include no more than 3 sections.
-        3. Synthesize the "Key Stats" and "Context" into a fluid narrative. Connect the dots between sections.
-        4. Do NOT mention "Pandas Agent" or "RAG Agent".
-        5. Use professional Markdown formatting.
+        2. Synthesize the "Key Stats" and "Context" into a fluid narrative. Connect the dots between sections.
+        3. CRITICAL: Identify and explicitly describe sales performance trends over time.
+        4. CRITICAL: Highlight top-performing and underperforming models or markets.
+        5. CRITICAL: Explore key drivers of sales (e.g., price, market segment, or model type).
+        6. MANDATORY: Include a specific section titled "Strategic Opportunities" containing 1-2 additional insights of your own choice that demonstrate creativity or business understanding (e.g., potential untapped markets, pricing strategy adjustments).
+        7. Do NOT mention "Pandas Agent" or "RAG Agent".
+        8. Use professional Markdown formatting.
 
         INPUT DATA FROM AGENTS:
         {full_context}
@@ -48,7 +51,7 @@ class InsightSynthesizer:
 
         # 3. Generate Full Text
         response = await self.client.chat.completions.create(
-            model="gpt-5.1",
+            model="gpt-4o", # Updated to a valid model name
             messages=[{"role": "system", "content": prompt}]
         )
         

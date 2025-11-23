@@ -71,6 +71,10 @@ class PlanningAgent:
            - *** DO NOT WRITE PYTHON CODE. ***
         2. If the step requires qualitative context, specs, or reasons (not in the excel), set "type" to "detailed".
            - The "query" must be a research question.
+        3. MANDATORY: Regardless of the specific user request, you MUST ensure the plan includes steps to analyze:
+           - Sales trends over time (e.g., Year-over-Year growth).
+           - Top-performing and underperforming models or regions.
+           - Key drivers of sales (e.g., Impact of Price on Volume, or breakdown by Model Type).
         
         OUTPUT FORMAT (JSON List):
         [
@@ -88,7 +92,7 @@ class PlanningAgent:
         """
         
         response = await self.client.chat.completions.create(
-            model="gpt-5.1", 
+            model="gpt-4o", # Updated to a valid model name
             messages=[{"role": "system", "content": prompt}],
             response_format={"type": "json_object"}
         )
@@ -144,16 +148,27 @@ async def generate_report(request: ReportRequest):
         planner = PlanningAgent()
         instructions = await planner.generate_plan(request.user_instructions, columns_list, sample_rows)
     else:
+        # Default plan updated to meet requirements if no user input is provided
         instructions = [
             {
-                "section": "Regional Performance",
+                "section": "Global Sales Trends",
                 "type": "high_level",
-                "query": "Calculate total Sales_Volume by Region. Sort descending."
+                "query": "Group data by Year and calculate total Sales_Volume to show the trend over time."
             },
             {
-                "section": "Regional Context",
+                "section": "Performance by Region",
+                "type": "high_level",
+                "query": "Calculate total Sales_Volume by Region. Sort descending to identify top and bottom performers."
+            },
+            {
+                "section": "Price & Segment Drivers",
+                "type": "high_level",
+                "query": "Analyze average Price_USD by Model to see which segments drive the most value."
+            },
+            {
+                "section": "Regulatory Context",
                 "type": "detailed",
-                "query": "What regulations impact sales in the top region?"
+                "query": "What key market drivers or regulations might impact sales trends for these models?"
             }
         ]
 
