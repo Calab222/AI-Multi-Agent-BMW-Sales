@@ -44,6 +44,7 @@ The system synthesizes the quantitative metrics from the Pandas Agent and the qu
 ├── ImportConfig.py
 ├── InsightSynthesisEngine.py
 ├── final_report.md
+├── Technical-Audience-Colton-Tang.pdf
 ├── data/ <-- Input data storage
 │   └── BMW sales data (2020-2024).xlsx
 └── my-app/ <-- Frontend (React/Vite)
