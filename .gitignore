@@ -4,3 +4,4 @@ __pycache__/
 .env
 artifacts/
 chroma_db/
+my-app/node_modules
