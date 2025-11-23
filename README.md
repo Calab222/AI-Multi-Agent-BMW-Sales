@@ -10,13 +10,25 @@ The system was built as a prototype to analyze BMW Global Sales Data (2020-2024)
 
 ## 🚀 Key Features
 
-* **Dual-Agent Workflow:**
-    * **Pandas Agent:** Executes Python code safely to calculate statistics, aggregate data, and generate Matplotlib/Seaborn visualizations.
-    * **RAG Agent (Contextual):** Uses ChromaDB to perform semantic search on vehicle specifications and regional contexts to answer qualitative questions.
-* **Insight Synthesis Engine:** Aggregates findings from both agents and uses GPT-4o/GPT-5 to write a professional Markdown report.
-* **Self-Healing Data Pipeline:** Automatically detects if the vector database is missing and rebuilds it from the source dataset on the first run.
-* **Interactive UI:** A React-based frontend to input natural language queries and view the generation process in real-time.
+### 1. Data Ingestion & Configuration
+Upload datasets and automatically detect schema configurations. The system identifies column types and prepares the data for agentic workflows.
 
+![Data Ingestion](./assets/ingestion.png)
+
+### 2. Pandas Agent (Quantitative Analysis)
+The Pandas Agent generates Python code on the fly to answer user queries. It executes the code to produce statistical summaries and visualizations (e.g., bar charts, trend lines) based on the ingested data.
+
+![Pandas Agent Execution](./assets/pandas-agent.png)
+
+### 3. RAG Agent (Qualitative Research)
+The Retrieval-Augmented Generation (RAG) Agent queries a vector database to provide contextual answers to research questions. It combines retrieved context with LLM capabilities to generate comprehensive insights, such as regulatory impact analysis.
+
+![RAG Agent Insights](./assets/rag-agent.png)
+
+### 4. Final Executive Report
+The system synthesizes the quantitative metrics from the Pandas Agent and the qualitative insights from the RAG Agent into a cohesive final report. This automated Markdown document presents a high-level executive summary, combining data trends with regulatory context to provide actionable business intelligence.
+
+![Final Executive Report](./assets/llm-report.png)
 ---
 
 ## 🛠️ Architecture
