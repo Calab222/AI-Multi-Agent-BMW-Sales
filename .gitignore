@@ -5,3 +5,4 @@ __pycache__/
 artifacts/
 chroma_db/
 my-app/node_modules
+technical-audience/

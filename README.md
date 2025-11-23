@@ -9,6 +9,9 @@ The system was built as a prototype to analyze BMW Global Sales Data (2020-2024)
 ---
 
 ## 🚀 Key Features
+Here is a quick look at the main feature:
+
+![App Demo1 GIF](./assets/my-app.gif)
 
 ### 1. Data Ingestion & Configuration
 Upload datasets and automatically detect schema configurations. The system identifies column types and prepares the data for agentic workflows.
@@ -81,9 +84,10 @@ The solution follows a modern client-server architecture:
 
 ### 2. Frontend Setup
 
-1.  Navigate to the frontend folder (or wherever your React app resides).
+1.  Navigate to the my-app folder (or wherever your React app resides).
 2.  Install dependencies:
     ```bash
+    cd my-app
     npm install
     ```
 
@@ -95,6 +99,7 @@ The solution follows a modern client-server architecture:
     ```
 2.  Start the development server:
     ```bash
+    cd my-app
     npm run dev
     ```
 3.  Open your browser to the URL provided by the frontend (usually `http://localhost:5173`).
