@@ -1,64 +1,88 @@
 import os
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 class InsightSynthesizer:
     def __init__(self):
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-    def generate_section_narrative(self, section_title, pandas_output, rag_output):
+    # --- NEW METHOD: Generates the whole report in one shot ---
+    async def generate_full_report(self, grouped_data):
         """
-        Merges quantitative stats (Pandas) with qualitative context (RAG).
+        Generates a comprehensive report in a single pass using data from ALL sections.
+        grouped_data: { "Section Title": { "pandas": ..., "rag": ... } }
         """
         
-        # 1. Prepare inputs for the LLM
-        # Handle cases where one agent might have failed or wasn't needed
-        stats_text = pandas_output.get('insight', 'No statistical data available.') if pandas_output else 'N/A'
-        context_text = rag_output.get('insight', 'No qualitative context available.') if rag_output else 'N/A'
+        # 1. Build Global Context from all agents
+        context_buffer = []
+        for section, data in grouped_data.items():
+            p_res = data.get('pandas')
+            r_res = data.get('rag')
+            
+            stats = p_res.get('insight', 'No numeric data.') if p_res else 'N/A'
+            qual = r_res.get('insight', 'No qualitative data.') if r_res else 'N/A'
+            
+            context_buffer.append(f"### SECTION DATA: {section}")
+            context_buffer.append(f"   - Key Stats: {stats}")
+            context_buffer.append(f"   - Context/Research: {qual}")
+            if p_res and p_res.get('image'):
+                context_buffer.append(f"   - (Image available for this section)")
         
-        image_markdown = ""
-        if pandas_output and pandas_output.get('image'):
-            image_markdown = f"\n\n![{section_title} Chart]({pandas_output['image']})"
+        full_context = "\n".join(context_buffer)
 
-        # 2. Construct the Prompt
-        # We ask the LLM to act as a reporter connecting the dots
+        # 2. Construct Single Prompt
         prompt = f"""
-        You are a Senior Business Analyst writing a report for BMW executives.
+        You are a Senior Business Analyst writing a comprehensive report for BMW executives.
         
-        TASK: Write a cohesive section for "{section_title}".
-        
-        INPUT DATA:
-        1. Quantitative Analysis (Hard Numbers):
-        "{stats_text}"
-        
-        2. Qualitative Context (Features/Specs/Reviews):
-        "{context_text}"
+        TASK: Write a complete, cohesive Executive Report based on the provided analysis sections.
         
         INSTRUCTIONS:
-        - Combine the numbers and the context into a single flowing narrative.
-        - Do not explicitly say "The RAG agent said...".
-        - If the qualitative context explains the numbers (e.g., high sales due to specific features), make that connection clear.
-        - Keep it professional, concise, and insight-driven.
-        - Use Markdown formatting.
+        1. Structure the report with an Executive Summary, followed by the Detailed Analysis (per section), and a Conclusion.
+        2. The report should include no more than 3 sections.
+        3. Synthesize the "Key Stats" and "Context" into a fluid narrative. Connect the dots between sections.
+        4. Do NOT mention "Pandas Agent" or "RAG Agent".
+        5. Use professional Markdown formatting.
+
+        INPUT DATA FROM AGENTS:
+        {full_context}
         """
 
-        # 3. Generate Narrative
-        response = self.client.chat.completions.create(
+        # 3. Generate Full Text
+        response = await self.client.chat.completions.create(
             model="gpt-5.1",
             messages=[{"role": "system", "content": prompt}]
         )
         
-        narrative = response.choices[0].message.content
+        final_text = response.choices[0].message.content
         
-        # 4. Return Final Markdown Block
-        final_output = f"## {section_title}\n\n{narrative}{image_markdown}\n\n"
-        return final_output
+        # 4. Inject Images back into the text
+        # We look for the Headers (## Section) and inject the image immediately after
+        for section, data in grouped_data.items():
+            if data.get('pandas') and data.get('pandas').get('image'):
+                image_path = data['pandas']['image']
+                # Markdown to insert
+                image_markdown = f"\n\n![{section} Chart]({image_path})\n\n"
+                
+                # Try to find the header the LLM generated
+                header_pattern = f"## {section}"
+                if header_pattern in final_text:
+                    # Insert image after the header
+                    final_text = final_text.replace(header_pattern, f"{header_pattern}{image_markdown}")
+                else:
+                    # Fallback: Append to end if LLM changed the title significantly
+                    final_text += f"\n\n### {section} Visualization\n{image_markdown}"
 
-    def compile_final_report(self, sections, filename="final_report.md"):
-        """Save all sections to a file."""
+        return final_text
+
+    def compile_final_report(self, content, filename="final_report.md"):
+        """Save content to a file. Handles list (legacy) or string (new)."""
         with open(filename, "w", encoding="utf-8") as f:
             f.write("# BMW Global Sales Analysis Report (2020-2024)\n\n")
             f.write("> Generated by AI Multi-Agent System\n\n")
-            for section in sections:
-                f.write(section)
+            
+            if isinstance(content, list):
+                for section in content:
+                    f.write(section)
+            else:
+                f.write(content)
         
         return os.path.abspath(filename)
