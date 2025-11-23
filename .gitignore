@@ -1,3 +1,6 @@
 # Byte-compiled / temporary files
 __pycache__/
 *.pyc
+.env
+artifacts/
+chroma_db/
