@@ -1,7 +1,7 @@
 import pandas as pd
 import chromadb
 import asyncio
-import uuid  # Added for unique filenames
+import uuid
 from chromadb.utils import embedding_functions
 from openai import AsyncOpenAI
 import os
@@ -19,7 +19,6 @@ class PandasAgent:
     async def execute_task(self, query):
         """Generates code asynchronously and executes it in a thread."""
         
-        # Generate a unique ID for this specific plot execution
         unique_id = uuid.uuid4().hex[:8]
         plot_filename = f"plot_{unique_id}.png"
         
@@ -54,7 +53,6 @@ class PandasAgent:
 
     def _run_code_sandbox(self, code):
         """Helper function to run exec() in a thread."""
-        # We must pass the plt object to ensure the context is correct
         local_scope = {"df": self.df, "plt": plt, "sns": sns, "pd": pd}
         try:
             exec(code, {}, local_scope)

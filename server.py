@@ -11,8 +11,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import AsyncOpenAI
-
-# Import your existing modules
 from ImportConfig import DataIngestion, AppConfig
 from DualAgentProcess import PandasAgent, RAGAgent
 from InsightSynthesisEngine import InsightSynthesizer
@@ -201,7 +199,6 @@ async def generate_report(request: ReportRequest):
         if res['type'] == 'pandas':
             grouped_sections[section_title]['pandas'] = output
             
-            # Prepare Image
             plot_base64 = None
             if output.get('image'):
                 plot_base64 = encode_image_to_base64(output['image'])
@@ -224,7 +221,6 @@ async def generate_report(request: ReportRequest):
                 "context": output.get('context_used', '')
             })
 
-    # --- 5. Generate Single Cohesive Report ---
     print("Synthesizing full report...")
     final_markdown = await synthesizer.generate_full_report(grouped_sections)
     

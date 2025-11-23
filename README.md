@@ -35,16 +35,24 @@ The system synthesizes the quantitative metrics from the Pandas Agent and the qu
 ---
 
 ## 📂 Project Structure
-* artifacts/ – Generated plots and reports
-* chroma_db/ – Vector database (auto-generated, gitignored)
-* data/ – Source datasets (Excel/CSV)
-* DualAgentProcess.py – Core logic for Pandas and RAG agents
-* ImportConfig.py – Configuration and Data Ingestion
-* InsightSynthesisEngine.py – Report writing logic
-* main.py / server.py – FastAPI application entry points
-* requirements.txt – Python dependencies
-* README.md – Project documentation
-
+```
+/my-project-folder
+├── README.md <-- Project documentation
+├── requirement.txt <-- Python dependencies
+├── server.py <-- Main application entry point/API server
+├── DualAgentProcess.py <-- Core Python logic
+├── ImportConfig.py
+├── InsightSynthesisEngine.py
+├── final_report.md
+├── data/ <-- Input data storage
+│   └── BMW sales data (2020-2024).xlsx
+└── my-app/ <-- Frontend (React/Vite)
+    ├── package.json
+    ├── .gitignore <-- Includes `node_modules/`
+    └── src/
+        ├── App.jsx
+        └── ... (other frontend files)
+```
 ---
 ## 🛠️ Architecture
 

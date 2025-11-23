@@ -5,7 +5,7 @@ class InsightSynthesizer:
     def __init__(self):
         self.client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-    # --- NEW METHOD: Generates the whole report in one shot ---
+    # Generates the whole report in one shot ---
     async def generate_full_report(self, grouped_data):
         """
         Generates a comprehensive report in a single pass using data from ALL sections.
@@ -55,20 +55,15 @@ class InsightSynthesizer:
         final_text = response.choices[0].message.content
         
         # 4. Inject Images back into the text
-        # We look for the Headers (## Section) and inject the image immediately after
         for section, data in grouped_data.items():
             if data.get('pandas') and data.get('pandas').get('image'):
                 image_path = data['pandas']['image']
-                # Markdown to insert
                 image_markdown = f"\n\n![{section} Chart]({image_path})\n\n"
                 
-                # Try to find the header the LLM generated
                 header_pattern = f"## {section}"
                 if header_pattern in final_text:
-                    # Insert image after the header
                     final_text = final_text.replace(header_pattern, f"{header_pattern}{image_markdown}")
                 else:
-                    # Fallback: Append to end if LLM changed the title significantly
                     final_text += f"\n\n### {section} Visualization\n{image_markdown}"
 
         return final_text

@@ -4,7 +4,6 @@ import logging
 
 # --- Configuration ---
 class AppConfig:
-    # In production, load these from .env files
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     DATA_PATH = "data\BMW sales data (2020-2024).xlsx"
     OUTPUT_DIR = "artifacts"
@@ -28,13 +27,6 @@ class AppConfig:
         }
     ]
     
-    DEFAULT_REPORT_INSTRUCTIONS = [
-        {
-            "section": "Regional Performance Drivers",
-            "pandas_query": "Calculate total sales volume by Region. Sort descending. Identify the top performing region.",
-            "rag_query": "What specific features or regulations make BMW models popular or unique in Europe?"
-        }
-    ]
 
 # --- Data Ingestion Layer ---
 class DataIngestion:
@@ -59,13 +51,11 @@ class DataIngestion:
         return self.df
 
     def _clean_data(self):
-        # Ensure numeric columns are actually numeric
         numeric_cols = ['Price_USD', 'Sales_Volume', 'Year', 'Engine_Size_L','Mileage_KM']
         for col in numeric_cols:
             if col in self.df.columns:
                 self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
         
-        # Drop rows with critical missing values
         self.df.dropna(subset=['Price_USD', 'Sales_Volume'], inplace=True)
         print(f"Data loaded successfully. Shape: {self.df.shape}")
 
@@ -76,9 +66,3 @@ class DataIngestion:
         buffer.append("Sample Data:")
         buffer.append(self.df.head(3).to_string())
         return "\n".join(buffer)
-
-if __name__ == "__main__":
-    # Test run
-    ingest = DataIngestion(AppConfig.DATA_PATH)
-    df = ingest.load_data()
-    print(ingest.get_schema())
