@@ -78,7 +78,7 @@ The solution follows a modern client-server architecture:
 
 ### Prerequisites
 
-* Python 3.9+
+* Python 3.11 (recommended)
 * Node.js & npm
 * OpenAI API Key
 
