@@ -107,11 +107,11 @@ The solution follows a modern client-server architecture:
 
 ### 3. Running the Application
 
-1.  Start the Backend API:
+1.  Use one terminal start the Backend API:
     ```bash
     python server.py
     ```
-2.  Start the development server:
+2.  Use another terminal start the development server:
     ```bash
     cd my-app
     npm run dev
